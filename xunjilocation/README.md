@@ -9,11 +9,31 @@ Ipslocation-Android 是一套基于 Android 4.3 及以上版本的室内地图�
 ## 添加依赖
 
 ```
-注意如果同时使用了Xunji的导航模块则不用导入,ispmap 导航模块已经导入了ips-location 模块
+注意如果同时使用了Xunji的导航模块则不用导入,com.locnavi:map 导航模块已经导入了ips-location 模块
+   compile 'com.locnavi:location:0.0.3'
+```
 
-  compile ('com.locnavi:location:0.0.1', {
-        exclude group: 'com.android.support'
-    })
+## 目前支持的cpu 架构 arm,暂时不支持其他架构,请配置下面的cpu架构
+```
+ndk {
+            // 必须设置cpu类型,设置支持的 SO 库构架,强烈建议仅仅支持'armeabi',
+            //如果添加全部平台的架构,包会变很大,市场面98% 都是armabi,如果想支持其他的cpu类型,请拷贝demo的跟根文件下的v7a
+            //和v8a 到App相应的的cpu文件,
+            //,默认仅仅支持'armeabi',不需要拷贝'armeabi',
+
+            abiFilters 'armeabi'
+}
+```
+
+
+## 加入编译限制
+
+```
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 ```
 
 ## 加入权限
@@ -55,16 +75,11 @@ Ipslocation-Android 是一套基于 Android 4.3 及以上版本的室内地图�
 
 以下的功能都需要在在Application 的onCreate 方法中进行初始化
 
+注意如果同时使用了ipsmap的导航模块,并且已经初始化导航模块,则不用初始化定位模块,ipsmap导航模块 已经对定位进行了初始化,
 
 ```
-注意如果同时使用了ipsmap的导航模块,并且已经初始化导航模块,则不用初始化定位模块,ipsmap导航模块 已经对定位进行了初始化,
-    XJLocationSDK.init(new XJLocationSDK.Configuration.Builder(this)
-                .appKey(Constants.IPSMAP_APP_KEY)
-                .debug(false)
-                //开启debug 后有log 日志,打正式版请务必关闭debug 日志
-                // 默认是false , 如果项目正式上线 debug 是false 
-                //以下情况: debug 只能是 true 如果是开发人员给出的测试 mapid(在正式版道一循上不显示,道一循Beta 版的列表显示)
-                .build());
+     XJLocationSDK.init(context,appKey);
+
 ```
 
 ## 功能一  定位功能
@@ -98,72 +113,6 @@ protected void onDestroy() {
 }
 ```
 
-
-
-
-## 功能二  背景导航到目的地功能
-
-1.初始化(sdk 进行下载地图 和初始化定位引擎 ,这里面处理蓝牙异常是否需要重启)
-```
-  ipsNavigation = new XJNavigation(getBaseContext(), mapid );
-            XJNavigation.registerUserToTargetLocationListener(new UserToTargetLocationListener() {
-                @Override
-                public void onError(InitNavErrorException errorException) {
-                    com.daoyixun.location.ipsmap.utils.L.e("ddddd","error "+errorException.toString());
-                }
-            });
-```
-
-
-2.设置 目的地 ,可以通过 构造 方法传进来 ,也 可以 通过 函数设置,注意是否成功
-
-```
-     targetIdList = new ArrayList<>();
-     targetIdList.add("Mv22bb4QWI");
-    targetIdList.add("UJx02Y1FyR");
-    targetIdList.add("bXTu1S1Dzk");
-    targetIdList.add("rIOVisqH8o");
-    targetIdList.add("481RceIJ2K");
-    UserToTargetData targData = XJNavigation.setTargetId(targetIdList);
-```
-
-
-3.获取导航距离
-
-
-```
-            ArrayList<UserToTargetData> userToTargetDataList = xjNavigation.startRouting();
-             if (userToTargetDataList != null) {
-                        for (int i = 0; i < userToTargetDataList.size(); i++) {
-                            UserToTargetData userToTargetData = userToTargetDataList.get(i);
-                            if (userToTargetDataList != null) {
-                                boolean success = userToTargetData.isSuccess();
-                                if (success) {
-                                    L.e("dddd", userToTargetData.toString());
-                                    String cont = i + "目的地:" + userToTargetData.getTarget() + " 距离 " + userToTargetData.getToTargetDistance() + "楼层:"
-                                            + userToTargetData.getTargetFloor()  +
-                                            "location "+userToTargetData.getNearLocationRegionName()+
-                                            "\r\n";
-                                    content += cont;
-                                    tvNavContent.setText(content);
-                                } else {
-                                    String cont = i + "   " + "flase " + "  " + userToTargetData.getErrorMessage() + "\r\n";
-                                    content += cont;
-                                    tvNavContent.setText(content);
-                                }
-                            } else {
-                                L.e("dddd", userToTargetData.toString());
-                            }
-                        }
-             }
-
-```
-4.结束导航
-
-```
-xjNavigation.stopNavigation();
-
-```
 
 ## 混淆
 ```

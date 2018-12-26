@@ -12,11 +12,7 @@ XunjiSDK-Android 是一套基于 Android 4.3 及以上版本的室内地图应�
 
 建议使用marven 方式
 // marven
-  compile ('com.locnavi:navigation:0.0.1', {
-        exclude group: 'com.android.support'
-    })
-
-
+   compile 'com.locnavi:map:0.1.2'
 
 ```
 如果仅仅使用定位模块请参考ipslocation demo README
@@ -33,6 +29,19 @@ ndk {
             abiFilters 'armeabi'
 }
 ```
+
+
+## 加入编译限制
+
+```
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+```
+
+
 ## 加入权限
 ```
 <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -49,55 +58,11 @@ ndk {
 ## 使用
 初始化
 
-在Application 的onCreate 方法中进行初始化
-``` 
-  使用默认配置信息
-    XJMapSDK.init(context, IPSMAP_APP_KEY);
-    或
-    定制配置信息 ,使用微信分享功能请实现相关的接口
-    XJMapSDK.init(new XJMapSDK.Configuration.Builder(context)
-                .appKey(Constants.IPSMAP_APP_KEY)
-                .shareToWechatListener(this)
-                 .debug(false)
-                  //开启debug 后有log 日志,打正式版请务必关闭debug 日志
-                  // 默认是false , 如果项目正式上线 debug 是false 
-                  //以下情况: debug 只能是 true 如果是开发人员给出的测试 mapid(在正式版道一循上不显示,道一循Beta 版的列表显示)
-                .build());
-
-
-
-
-  微信分享功能可以参考以下代码,需要替换自己申请的id
-
-      @Override
-      public void shareToWechat(String url, String title, String description, Bitmap bitmap) {
-          try {
-              IWXAPI wxApi = WXAPIFactory.createWXAPI(context, Constants.WECHAT_APP_ID);
-              wxApi.registerApp(Constants.WECHAT_APP_ID);
-              if (!wxApi.isWXAppInstalled()) {
-                  T.showShort("未安装微信");
-                  return;
-              }
-              WXWebpageObject webpage = new WXWebpageObject();
-              webpage.webpageUrl = url;
-              WXMediaMessage msg = new WXMediaMessage(webpage);
-              msg.title = title;
-              msg.description = description;
-              msg.setThumbImage(bitmap);
-              SendMessageToWX.Req req = new SendMessageToWX.Req();
-              req.transaction = buildTransaction("webpage");
-              req.message = msg;
-              req.scene = SendMessageToWX.Req.WXSceneSession;
-              wxApi.sendReq(req);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-      }
-
+在Application 的onCreate 方法中进行初始化,注意禁止多次初始化 SDK ,会导致频发访问寻迹服务器,仅仅初始化一次
+```
+    XJMapSDK.init(context,appKey);
                 
 ```
-
-
 
 启动地图方式1,携带目的地和地图id,导航到目的地
 ```
@@ -111,32 +76,6 @@ XJMapSDK.openIpsMapActivity(Context context, String mapId);
 
 ```
 
-定位监听,获取当前的位置,可以参考ipslocation demo ,需要提前获取定位和蓝牙权限
-```
-xjClient = new XJClient(context, map_id);
-xjClient.registerLocationListener(new IpsLocationListener() {
-    @Override
-    public void onReceiveLocation(IpsLocation ipsLocation){
-    if(ipsLocation == null){
-        //定位失败;
-        return;
-    }
-    //是否在Map内
-    ipsLocation.isInThisMap()
-
-    }
-});
-xjClient.start();
-```
-
-activity 结束时调用
-```
-@Override
-protected void onDestroy() {
-    super.onDestroy();
-    xjClient.stop();
-}
-```
 
 ## 混淆
 ```
@@ -153,6 +92,7 @@ protected void onDestroy() {
 1.0
 ![](/pic/7991511168017_.pic.jpg)
 ![](/pic/8021511168507_.pic.jpg)
+
 出现上面的类似xml资源文件缺失的情况:
 两种解决方案:
 1. 在通过gradle 引用是加入exclude group: 'com.android.support' ,并且自己加入compile 'com.android.support:appcompat-v7:版本号'
@@ -194,6 +134,16 @@ app如果使用了okhttp ,glide ...出现第三发开源库 冲突
          sourceCompatibility JavaVersion.VERSION_1_8
          targetCompatibility JavaVersion.VERSION_1_8
      }
+
+```
+
+ 4.0
+
+![](/pic/WX20181226-175503@2x.png)
+```
+        在 Manifest的 application  中加入这个
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
 ```
 
 

@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn com.baidu.**
+-keep class com.baidu.** {*;}
+-dontwarn com.iflytek.**
+-keep class com.iflytek.**{*;}
+-keep public class com.sails.engine.patterns.IconPatterns

@@ -9,6 +9,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 必须设置cpu类型,设置支持的 SO 库构架,强烈建议仅仅支持'armeabi',
+            //如果添加全部平台的架构,包会变很大,市场面98% 都是armabi,如果想支持其他的cpu类型,请拷贝demo的跟根文件下的v7a
+            //和v8a 到App相应的的cpu文件,
+            //,默认仅仅支持'armeabi',不需要拷贝'armeabi',
+
+            abiFilters 'armeabi'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
@@ -25,4 +38,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    compile 'com.locnavi:map:0.1.2'
+//    compile ('com.locnavi:map:0.0.1', {
+//        exclude group: 'com.android.support'
+//    })
 }
