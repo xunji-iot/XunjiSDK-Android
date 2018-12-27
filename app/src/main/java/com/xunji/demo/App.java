@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 
 import com.locnavi.map.ShareToWechatListener;
 import com.locnavi.map.XJMapSDK;
-import com.locnavi.map.XJMapSDK$XJMapConfiguration;
 
 
 public class App extends Application {
@@ -22,7 +21,11 @@ public class App extends Application {
     }
 
     private void initXJmap() {
-        XJMapSDK.init(context,appKey);
+//        XJMapSDK.init(context,appKey);
+        XJMapSDK.init(new XJMapSDK.XJMapConfiguration.Builder(context)
+                .appKey(appKey)
+
+                .build());
     }
 
 

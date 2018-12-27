@@ -12,7 +12,13 @@ XunjiSDK-Android 是一套基于 Android 4.3 及以上版本的室内地图应�
 
 建议使用marven 方式
 // marven
-   compile 'com.locnavi:map:0.1.2'
+   compile 'com.locnavi:map:0.1.4'
+
+
+  // 或去除重复的依赖
+  compile ('com.ipsmap:ipsmap:1.4.5', {
+          exclude group: 'com.android.support'
+      })
 
 ```
 如果仅仅使用定位模块请参考xunjilocation demo README
@@ -61,6 +67,16 @@ ndk {
 在Application 的onCreate 方法中进行初始化,注意禁止多次初始化 SDK ,会导致频发访问寻迹服务器,仅仅初始化一次
 ```
     XJMapSDK.init(context,appKey);
+    或
+     定制配置信息 ,使用微信分享功能请实现相关的接口
+        XJMapSDK.init(new XJMapSDK.XJMapConfiguration.Builder(context)
+                    .appKey(Constants.IPSMAP_APP_KEY)
+                    .shareToWechatListener(this)
+                     .debug(false)
+                      //开启debug 后有log 日志,打正式版请务必关闭debug 日志
+                      // 默认是false , 如果项目正式上线 debug 是false
+                      //以下情况: debug 只能是 true 如果是开发人员给出的测试 mapid(在正式版道一循上不显示,道一循Beta 版的列表显示)
+                    .build());
                 
 ```
 
