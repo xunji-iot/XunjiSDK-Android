@@ -16,7 +16,7 @@ XunjiSDK-Android 是一套基于 Android 4.3 及以上版本的室内地图应�
 
 
   // 或去除重复的依赖
-  compile ('com.ipsmap:ipsmap:1.4.5', {
+  compile ('com.locnavi:map:0.1.4', {
           exclude group: 'com.android.support'
       })
 
