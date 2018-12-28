@@ -82,13 +82,13 @@ ndk {
 
 启动地图方式1,携带目的地和地图id,导航到目的地
 ```
-XJMapSDK.openIpsMapActivity(Context context, String mapId, String targetId);
+XJMapSDK.openXJMapActivity(Context context, String mapId, String targetId);
 
 ```
 
 启动地图方式2,仅仅传递地图的id
 ```
-XJMapSDK.openIpsMapActivity(Context context, String mapId);
+XJMapSDK.openXJMapActivity(Context context, String mapId);
 
 ```
 
