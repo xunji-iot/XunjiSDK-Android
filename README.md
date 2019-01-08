@@ -12,11 +12,11 @@ XunjiSDK-Android 是一套基于 Android 4.3 及以上版本的室内地图应�
 
 建议使用marven 方式
 // marven
-   compile 'com.locnavi:map:0.1.5'
+   compile 'com.locnavi:map:0.1.6'
 
 
   // 或去除重复的依赖
-  compile ('com.locnavi:map:0.1.5', {
+  compile ('com.locnavi:map:0.1.6', {
           exclude group: 'com.android.support'
       })
 
