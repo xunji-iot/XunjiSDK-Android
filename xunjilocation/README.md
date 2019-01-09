@@ -1,7 +1,7 @@
 # XunjiSDK-Android
 
 
-Ipslocation-Android 是一套基于 Android 4.3 及以上版本的室内地图应用程序开发接口，供开发者在自己的Android应用中加入室内地图相关的功能，包括：获取当前位置等功能。
+XJlocation-Android 是一套基于 Android 4.3 及以上版本的室内地图应用程序开发接口，供开发者在自己的Android应用中加入室内地图相关的功能，包括：获取当前位置等功能。
 
 ## 获取AppKey和MapId
 请联系开发人员
@@ -9,8 +9,8 @@ Ipslocation-Android 是一套基于 Android 4.3 及以上版本的室内地图�
 ## 添加依赖
 
 ```
-注意如果同时使用了Xunji的导航模块则不用导入,com.locnavi:map 导航模块已经导入了ips-location 模块
-   compile 'com.locnavi:location:0.0.3'
+注意如果同时使用了Xunji的导航模块则不用导入,com.locnavi:map 导航模块已经导入了xunji-location 模块
+   compile 'com.locnavi:location:0.0.6'
 ```
 
 ## 目前支持的cpu 架构 arm,暂时不支持其他架构,请配置下面的cpu架构
@@ -75,7 +75,7 @@ ndk {
 
 以下的功能都需要在在Application 的onCreate 方法中进行初始化
 
-注意如果同时使用了ipsmap的导航模块,并且已经初始化导航模块,则不用初始化定位模块,ipsmap导航模块 已经对定位进行了初始化,
+注意如果同时使用了xunji的导航模块,并且已经初始化导航模块,则不用初始化定位模块,xunji导航模块 已经对定位进行了初始化,
 
 ```
      XJLocationSDK.init(context,appKey);
@@ -83,28 +83,36 @@ ndk {
 ```
 
 ## 功能一  定位功能
-1.定位监听,获取当前的位置,可以参考ipslocation demo ,需要提前获取定位和蓝牙权限
+1.定位监听,获取当前的位置,可以参考xunjilocation demo ,需要提前获取定位和蓝牙权限,XJLocation 包括经纬度等信息
 ```
 
 xjClient = new XJClient(context, map_id);
-//携带用户id用法
-xjClient = new XJClient(MainActivity.this, Constants.IPSMAP_MAP_ID,Constants.IPSMAP_USER_ID);
-xjClient.registerLocationListener(new IpsLocationListener() {
+xjClient.registerLocationListener(new XJLocationListener() {
     @Override
-    public void onReceiveLocation(IpsLocation ipsLocation){
-    if(ipsLocation == null){
+    public void onReceiveLocation(XJLocation xjLocationLocation){
+    if(xjLocationLocation == null){
         //定位失败;
         return;
     }
     //是否在Map内
-    ipsLocation.isInThisMap()
+    xjLocationLocation.isInThisMap()
 
     }
 });
+
+// xjClient.start(); 调用一次回调一次注册的结果
+// 如果想要循环回调,请循环调用 xjClient.start();
 xjClient.start();
 ```
 
-2.activity 结束时调用
+2.获取最近的区域的名字,此方法比较耗性能,请在子线程进行调用
+
+
+```
+xjClient.getNearestLocationRegion()
+```
+
+3.activity 结束时调用
 ```
 @Override
 protected void onDestroy() {
@@ -118,37 +126,3 @@ protected void onDestroy() {
 ```
 -keep public class com.sails.engine.patterns.IconPatterns
 ```
-
-错误码
-
-```
-    //Error code message
-    public  static final  int ERROR_CODE_0 = 0;
-    public static final String ERROR_MESSAGE_0 = "蓝牙需要重启";
-
-    public  static final  int ERROR_CODE_1 = 1;
-    public static final String ERROR_MESSAGE_1 = "没有读取地图的权限";
-
-    public  static final  int ERROR_CODE_2 = 2;
-    public static final String ERROR_MESSAGE_2 = "地图信息不完整";
-
-    public  static final  int ERROR_CODE_3 = 3;
-    public static final String ERROR_MESSAGE_3 = "网络异常 加载地图失败";
-
-    public  static final  int ERROR_CODE_4 = 4;
-    public static final String ERROR_MESSAGE_4 = "没有找到目的地,请检查id是否正确!";
-
-    public  static final  int ERROR_CODE_5 = 5;
-    public static final String ERROR_MESSAGE_5 = "路径规划失败!";
-
-    public  static final  int ERROR_CODE_6 = 6;
-    public static final String ERROR_MESSAGE_6 = "定位失败!";
-
-    public  static final  int ERROR_CODE_7 = 7;
-    public static final String ERROR_MESSAGE_7 = "正在加载地图!";
-
-    public  static final  int ERROR_CODE_8 = 8;
-    public static final String ERROR_MESSAGE_8 = "没有设置目的地列表!";
-```
-
-
