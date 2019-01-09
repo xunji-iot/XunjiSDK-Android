@@ -47,9 +47,13 @@ public class LocationActivity extends AppCompatActivity {
                 }
 
 
+
 //                com.orhanobut.logger.Logger.e("dddd xjLocationLocation",xjLocation.isInThisMap() + "" + xjClient.getNearestLocationRegion());
                 //定位位置是否在map中
-                Toast.makeText(getApplicationContext(), xjLocation.isInThisMap() + "" + xjLocation.getNearLocationRegion(), Toast.LENGTH_SHORT).show();
+                L.e("eeee","");
+                Toast.makeText(getApplicationContext(), xjLocation.isInThisMap() + "Latitude " + xjLocation.getLatitude() +"Longitude " +xjLocation.getLongitude()
+
+                        , Toast.LENGTH_SHORT).show();
 //                xjLocation.
             }
         });
